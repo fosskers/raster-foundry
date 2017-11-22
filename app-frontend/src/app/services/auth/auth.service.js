@@ -1,5 +1,5 @@
 /* globals BUILDCONFIG Auth0Lock heap */
-import ApiActions from '../../redux/actions/api-actions';
+import ApiActions from '_redux/actions/api-actions';
 
 let assetLogo = BUILDCONFIG.LOGOFILE ?
     require(`../../../assets/images/${BUILDCONFIG.LOGOFILE}`) :

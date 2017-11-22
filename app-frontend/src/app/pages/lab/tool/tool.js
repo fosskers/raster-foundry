@@ -1,7 +1,7 @@
 /* global L */
 import { FrameView } from '../../../components/map/labMap/frame.module.js';
-import LabActions from '../../../redux/actions/lab-actions';
-import NodeActions from '../../../redux/actions/node-actions';
+import LabActions from '_redux/actions/lab-actions';
+import NodeActions from '_redux/actions/node-actions';
 
 class LabToolController {
     constructor(

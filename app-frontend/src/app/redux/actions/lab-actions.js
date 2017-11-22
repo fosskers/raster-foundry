@@ -1,4 +1,4 @@
-import { authedRequest } from '../api-utils';
+import { authedRequest } from '_api/authentication';
 
 export const TOOL_LOAD = 'TOOL_LOAD';
 export const TOOL_UPDATE_NAME = 'TOOL_UPDATE_NAME';
@@ -17,7 +17,6 @@ export function loadTool(payload, readonly) {
 }
 
 export function updateToolName(name) {
-    // TODO update this to use redux-promise instead of the removed middleware
     return (dispatch, getState) => {
         let state = getState();
         let updatedTool = Object.assign({}, state.lab.tool, {name});
