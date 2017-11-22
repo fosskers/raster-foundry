@@ -1,15 +1,20 @@
 import _ from 'lodash';
 import {Map} from 'immutable';
 import { API_INIT } from './actions/api-actions';
+
 import { TOOL_ACTION_PREFIX } from './actions/lab-actions';
 import { NODE_ACTION_PREFIX } from './actions/node-actions';
 import { HISTOGRAM_ACTION_PREFIX } from './actions/histogram-actions';
 import { STATISTICS_ACTION_PREFIX } from './actions/statistics-actions';
 
+import { ANNOTATIONS_ACTION_PREFIX } from './actions/annotation-actions';
+
 import { toolReducer } from './reducers/tool-reducer';
 import { nodeReducer } from './reducers/node-reducer';
 import { histogramReducer } from './reducers/histogram-reducer';
 import { statisticsReducer } from './reducers/statistics-reducer';
+
+import { annotationReducer } from './reducers/annotation-reducer';
 
 const INITIAL_LAB_STATE = {
     // tool state
@@ -45,6 +50,25 @@ function lab(state = INITIAL_LAB_STATE, action) {
     }
 }
 
+const INITIAL_PROJECTS_STATE = {
+    projectId: null,
+    annotations: new Map()
+};
+
+function projects(state = INITIAL_PROJECTS_STATE, action) {
+    if (!action || !action.type) {
+        return state;
+    }
+
+    const prefix = _.first(action.type.split('_'));
+
+    switch (prefix) {
+    case ANNOTATIONS_ACTION_PREFIX:
+        return annotationReducer(state, action);
+    default: return state;
+    }
+}
+
 const INITIAL_API_STATE = {
     apiToken: null,
     apiUrl: null,
@@ -68,5 +92,5 @@ function api(state = INITIAL_API_STATE, action) {
 }
 
 export default {
-    lab, api
+    lab, projects, api
 };

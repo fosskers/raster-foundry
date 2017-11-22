@@ -2,12 +2,14 @@
 import angular from 'angular';
 require('./annotate.scss');
 
+import AnnotationActions from '_redux/actions/annotation-actions';
+
 const RED = '#E57373';
 const BLUE = '#3388FF';
 
 class AnnotateController {
     constructor( // eslint-disable-line max-params
-        $log, $state, $scope, $rootScope, $anchorScroll, $timeout, $element, $window,
+        $log, $state, $scope, $rootScope, $anchorScroll, $timeout, $element, $window, $ngRedux,
         mapService, hotkeys
     ) {
         'ngInject';
@@ -21,7 +23,19 @@ class AnnotateController {
         this.$window = $window;
         this.hotkeys = hotkeys;
 
+        let unsubscribe = $ngRedux.connect(
+            this.mapStateToThis,
+            AnnotationActions
+        )(this);
+        $scope.$on('$destroy', unsubscribe);
+
         this.getMap = () => mapService.getMap('edit');
+    }
+
+    mapStateToThis(state) {
+        return {
+            annotations: state.projects.annotations
+        };
     }
 
     $onInit() {
@@ -40,6 +54,9 @@ class AnnotateController {
         });
 
         this.$scope.$on('$destroy', this.$onDestroy.bind(this));
+
+        this.projectId = this.$state.params.projectid;
+        this.fetchAnnotations(this.projectId);
     }
 
     $onDestroy() {
@@ -96,9 +113,8 @@ class AnnotateController {
     }
 
     bindHotkeys() {
-        this.hotkeys
-            .bindTo(this.$scope)
-            .add({
+        let bindings = [
+            {
                 combo: 'n',
                 description: 'Create new rectangle',
                 callback: () => {
@@ -108,8 +124,8 @@ class AnnotateController {
                         }
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'p',
                 description: 'Create new polygon',
                 callback: () => {
@@ -119,8 +135,8 @@ class AnnotateController {
                         }
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'm',
                 description: 'Create new point',
                 callback: () => {
@@ -130,8 +146,8 @@ class AnnotateController {
                         }
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'c',
                 description: 'Clone annotation',
                 callback: () => {
@@ -146,8 +162,8 @@ class AnnotateController {
                         );
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'e',
                 description: 'Edit annotation',
                 callback: () => {
@@ -166,8 +182,8 @@ class AnnotateController {
                         }
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'd',
                 description: 'Delete annotation',
                 callback: () => {
@@ -180,8 +196,8 @@ class AnnotateController {
                         );
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'r',
                 description: 'Rotate/rescale annotation shape',
                 callback: () => {
@@ -189,8 +205,8 @@ class AnnotateController {
                         this.createRotatableLayerFromDrawLayer(mapWrapper);
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'up',
                 description: 'Move annotation north',
                 callback: () => {
@@ -198,8 +214,8 @@ class AnnotateController {
                         this.onMoveAnnotation(mapWrapper, 'up');
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'down',
                 description: 'Move annotation south',
                 callback: () => {
@@ -207,8 +223,8 @@ class AnnotateController {
                         this.onMoveAnnotation(mapWrapper, 'down');
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'left',
                 description: 'Move annotation west',
                 callback: () => {
@@ -216,8 +232,8 @@ class AnnotateController {
                         this.onMoveAnnotation(mapWrapper, 'left');
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'right',
                 description: 'Move annotation east',
                 callback: () => {
@@ -225,8 +241,8 @@ class AnnotateController {
                         this.onMoveAnnotation(mapWrapper, 'right');
                     });
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'shift+return',
                 allowIn: ['INPUT', 'TEXTAREA'],
                 description: 'Submit annotation',
@@ -235,8 +251,8 @@ class AnnotateController {
                         this.$timeout(() => angular.element('.annotation-confirm').click());
                     }
                 }
-            })
-            .add({
+            },
+            {
                 combo: 'esc',
                 allowIn: ['INPUT', 'TEXTAREA'],
                 description: 'Cancel submitting annotation',
@@ -250,7 +266,10 @@ class AnnotateController {
                         }
                     }
                 }
-            });
+            }
+        ];
+        bindings.forEach(binding => this.hotkeys.add(binding));
+        this.hotkeys.bindTo(this.$scope);
     }
 
     onMoveAnnotation(mapWrapper, arrowKey) {
