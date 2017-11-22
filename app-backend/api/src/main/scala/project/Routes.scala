@@ -91,7 +91,12 @@ trait ProjectRoutes extends Authentication
             traceName("projects-create-annotations") {
               createAnnotation(projectId)
             }
-          }
+          } ~
+            delete {
+              traceName("projects-delete-annotations") {
+                deleteProjectAnnotations(projectId)
+              }
+            }
         } ~
         pathPrefix(JavaUUID) { annotationId =>
           pathEndOrSingleSlash {
@@ -309,6 +314,12 @@ trait ProjectRoutes extends Authentication
   def deleteAnnotation(annotationId: UUID): Route = authenticate { user =>
     onSuccess(drop(Annotations.deleteAnnotation(annotationId, user))) {
       completeSingleOrNotFound
+    }
+  }
+
+  def deleteProjectAnnotations(projectId: UUID): Route = authenticate { user =>
+    onSuccess(drop(Annotations.deleteProjectAnnotations(projectId, user))) {
+      completeSomeOrNotFound
     }
   }
 

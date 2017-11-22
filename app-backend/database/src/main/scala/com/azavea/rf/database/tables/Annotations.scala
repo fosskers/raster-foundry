@@ -134,6 +134,17 @@ object Annotations extends TableQuery(tag => new Annotations(tag)) with LazyLogg
       .filter(_.id === annotationId)
       .delete
 
+  /** Given a Project ID, attempt to all associated annotations from the database
+    *
+    * @param projectId UUID ID of project to remove annotations from
+    * @param user     Results will be limited to user's organization
+    */
+  def deleteProjectAnnotations(projectId: UUID, user: User) =
+    Annotations
+      .filterToSharedOrganizationIfNotInRoot(user)
+      .filter(_.projectId === projectId)
+      .delete
+
   /** Update a Annotation
     * @param annotation Annotation to use for update
     * @param annotationId UUID of Annotation to update
