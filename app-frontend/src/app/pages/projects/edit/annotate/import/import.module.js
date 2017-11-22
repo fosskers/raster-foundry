@@ -1,4 +1,4 @@
-/* globals _, $ */
+/* globals _, $, FileReader */
 import angular from 'angular';
 
 require('./import.scss');
@@ -27,7 +27,6 @@ class AnnotateImportController {
         this.isMachineData = false;
     }
 
-    /* eslint-disable no-undef */
     bindUploadEvent() {
         $('#btn-upload').change((e) => {
             let upload = _.values(e.target.files);
@@ -42,7 +41,6 @@ class AnnotateImportController {
             }
         });
     }
-    /* eslint-enable no-undef */
 
     isMachineMade() {
         this.isMachineData = !this.isMachineData;

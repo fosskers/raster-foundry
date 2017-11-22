@@ -99,7 +99,8 @@ object Annotations extends TableQuery(tag => new Annotations(tag)) with LazyLogg
   }
 
   /** Insert many Annotations given a secreate case class with a user
-    *
+    * TODO this should return geojson of all the created objects, so we can use it on the frontend
+    * 
     * @param annotationsToCreate Seq[Annotation.Create] to use to create full Annotation
     * @param user                User to create a new Annotation with
     */

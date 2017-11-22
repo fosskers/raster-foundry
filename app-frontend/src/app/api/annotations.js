@@ -1,7 +1,7 @@
 import {authedRequest} from './authentication';
 
 
-export function getProjectAnnotations(projectId, state) {
+export function getProjectAnnotationsRequest(projectId, state) {
     return authedRequest({
         method: 'get',
         url: `${state.api.apiUrl}` +
@@ -9,7 +9,7 @@ export function getProjectAnnotations(projectId, state) {
     }, state);
 }
 
-export function createProjectAnnotations(projectId, annotationGeojson, state) {
+export function createProjectAnnotationsRequest(projectId, annotationGeojson, state) {
     return authedRequest({
         method: 'post',
         url: `${state.api.apiUrl}` +
@@ -18,7 +18,7 @@ export function createProjectAnnotations(projectId, annotationGeojson, state) {
     }, state);
 }
 
-export function updateProjectAnnotations(projectId, annotationId, annotation, state) {
+export function updateProjectAnnotationsRequest(projectId, annotationId, annotation, state) {
     return authedRequest({
         method: 'put',
         url: `${state.api.apiUrl}` +
@@ -27,7 +27,7 @@ export function updateProjectAnnotations(projectId, annotationId, annotation, st
     }, state);
 }
 
-export function deleteProjectAnnotation(projectId, annotationId, state) {
+export function deleteProjectAnnotationRequest(projectId, annotationId, state) {
     return authedRequest({
         method: 'delete',
         url: `${state.api.apiUrl}` +

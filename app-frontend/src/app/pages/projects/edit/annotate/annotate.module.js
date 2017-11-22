@@ -573,9 +573,9 @@ class AnnotateController {
         this.disableEditHandler();
 
         this.getMap().then((mapWrapper) => {
-            _.forEach(this.annoToExport.features, (f) => {
-                if (f.properties.id === id) {
-                    Object.assign(f, this.createGeojsonFromDrawLayer(
+            _.forEach(this.annoToExport.features, (feature) => {
+                if (feature.properties.id === id) {
+                    Object.assign(feature, this.createGeojsonFromDrawLayer(
                         mapWrapper, id, label, description
                     ));
                 }

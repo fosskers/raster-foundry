@@ -52,7 +52,8 @@ function lab(state = INITIAL_LAB_STATE, action) {
 
 const INITIAL_PROJECTS_STATE = {
     projectId: null,
-    annotations: new Map()
+    annotations: new Map(),
+    newAnnotations: new Map()
 };
 
 function projects(state = INITIAL_PROJECTS_STATE, action) {
@@ -70,9 +71,7 @@ function projects(state = INITIAL_PROJECTS_STATE, action) {
 }
 
 const INITIAL_API_STATE = {
-    apiToken: null,
-    apiUrl: null,
-    tileUrl: null
+    apiToken: null, apiUrl: null, tileUrl: null
 };
 
 function api(state = INITIAL_API_STATE, action) {
